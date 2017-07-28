@@ -14,7 +14,7 @@ what the script uses.
 
 ## Hor+ FOV calculator - `hor+fovcalc`
 
-Convert from *Hor+* FOV to *Vert-* FOV (what OpenArena *currently* uses).
+Convert from *Hor+* FOV to *Vert-* FOV.
 
 *Hor+* is where the vertical FOV has the same value as it would have on a 4:3
 aspect ratio monitor and the horizontal FOV is changed to fit the monitors
