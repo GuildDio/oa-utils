@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+
+#===============================================================================
+# OpenArena FOV sensitivity calculator - fovsenscalc
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# WTF is this?
+#   script used to calculate mouse sensitivity values after changing `cg_fov`
+#   that will keep the exact same "feel" of the mouse
+#
+# Who made this?
+#   My little commie <3
+#===============================================================================
+
+import sys
+import math
+
+def usage():
+    sys.stderr.write("""\
+OpenArena FOV sensitivity calculator
+====================================
+
+Usage:
+  %s <new_fov> <base_fov> [number]...
+
+Options:
+  <new_fov> - The new value of new `cg_fov`.
+  <old_fov> - The old value of `cg_fov`.
+  [number]... - The sensitivity number(s) to scale with the fov change. It is
+    recommended scale by adjusting the cvars `m_yaw` and `m_pitch`, but
+    `sensitivity` and `cl_mouseaccel` can also be adjusted instead. If no number
+    is specified the program will print out the ratio between the new
+    sensitivity and the old sensitivity
+
+Example:
+  How to get the new m_yaw/m_pitch values when switching to 22.5 fov from 90 fov
+  and 0.022 m_yaw/m_pitch?
+    %s 22.5 90 0.022
+""" % (sys.argv[0], sys.argv[0]))
+    sys.exit(1)
+
+def error(msg):
+    sys.stderr.write(msg)
+    sys.exit(1)
+
+def sens_ratio(new_fov, old_fov):
+    new_fov = math.radians(new_fov)
+    old_fov = math.radians(old_fov)
+    return math.tan(new_fov / 2) / math.tan(old_fov / 2)
+
+def main():
+    if len(sys.argv) < 3:
+        usage()
+
+    try:
+        new_fov = float(sys.argv[1])
+    except:
+        error("Invalid number argument: %s" % sys.argv[1])
+
+    try:
+        old_fov = float(sys.argv[2])
+    except:
+        error("Invalid number argument: %s" % sys.argv[2])
+
+    c = sens_ratio(new_fov, old_fov)
+
+    if (len(sys.argv) == 3):
+        print(c)
+    else:
+        for v in sys.argv[3:]:
+            try:
+                print(c * float(v))
+            except:
+                error("Invalid number argument: %s" % v)
+
+if __name__ == "__main__":
+    main()
