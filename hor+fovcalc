@@ -13,26 +13,17 @@
 #   My little commie <3
 #===============================================================================
 
+import argparse
 import sys
 import math
 
-def usage():
-    sys.stderr.write("""\
-Hor+ FOV calculator
-===================
+"""
+Hor+ FOV calculator.
 
-Usage:
-  %s <hfov at 4:3> <aspect>
-
-Options:
-  <hfov at 4:3> - The horizontal fov at 4:3 aspect ratio
-  <aspect> - The aspect ratio of the current monitor
-
-Example:
-   How to get the correct cg_fov in OpenArena if I want 90 Hor+ fov?
-     %s 90 16:9
-""" % (sys.argv[0], sys.argv[0]))
-    sys.exit(1)
+A script for calculating the Vert- horizontal fov for your aspect ratio that
+will keep the same vertical fov as someone who play on specified horizontal
+FOV on a monitor with 4:3 aspect ratio.
+"""
 
 def error(msg):
     sys.stderr.write(msg)
@@ -57,20 +48,30 @@ def parse_aspect(s):
     return float(a[0]) / float(a[1])
 
 def main():
-    if len(sys.argv) < 3:
-        usage()
-
-    try:    
-        hfov_at_4_3 = float(sys.argv[1])
-    except:
-        error("Invalid number argument: %s" % sys.argv[1]);
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        '--hor-fov',
+        help='The horizontal fov at 4:3 aspect ratio',
+        type=float,
+        required=True,
+    )
+    parser.add_argument(
+        '--aspect',
+        help='The aspect ratio of the current monitor',
+        type=str,
+        required=True,
+    )
+    args = parser.parse_args()
 
     try:
-        aspect = parse_aspect(sys.argv[2])
+        aspect = parse_aspect(args.aspect)
     except:
-        error("Invalid aspect-ratio argument: %s" % sys.argv[2]);
+        error("Invalid aspect-ratio argument: %s" % args.aspect);
 
-    vfov = hfov_to_vfov(hfov_at_4_3, 4.0 / 3.0)
+    vfov = hfov_to_vfov(args.hor_fov, 4.0 / 3.0)
     hfov = vfov_to_hfov(vfov, aspect)
     print(hfov)
 
