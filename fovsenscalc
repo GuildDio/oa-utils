@@ -49,11 +49,10 @@ def main():
         required=True,
     )
     parser.add_argument(
-        '--values-to-scale',
         help='The sensitivity number(s) to scale with the fov change',
         dest='values_to_scale',
         default=[],
-        nargs='+',
+        nargs='*',
         type=float,
     )
     args = parser.parse_args()
